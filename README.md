@@ -1,0 +1,2 @@
+# JO-GPT-DESKTOP
+JO-GPT 데스크탑 앱
