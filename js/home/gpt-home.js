@@ -63,19 +63,48 @@ document.addEventListener('DOMContentLoaded', () => {
             if (token) {
                 console.log(">>> [Success] 메인 프로세스로부터 토큰 수신:", token);
                 localStorage.setItem('ACCESS_TOKEN', token);
-
+                // 1. 모달을 즉시 닫아서 반응성을 높임
+                const loginModal = document.querySelector('.modelLogin');
+                if (loginModal) loginModal.style.display = 'none';
                 // 토큰 수신 직후 정보 갱신
                 fetchMyInfo();
 
-                alert('로그인이 완료되었습니다.');
-                const loginModal = document.querySelector('.modelLogin');
-                if (loginModal) {
-                    loginModal.style.display = 'none';
-                }
+                showToast('성공적으로 로그인 되었습니다.');
+
+                // 로그인 완료 후 textarea에 자동으로 포커스 주기
+                const textarea = document.querySelector('.fake-input');
+                setTimeout(() => {
+                    if (textarea) textarea.focus();
+                },100)
+
             }
         });
     }
 
-    // 3. 페이지 초기 로드 시 기존 로그인 상태 확인
+    // 3. 페이지 초기 로드 시 기존 로그인 상태 확인 및 에러 메시지 체크
     fetchMyInfo();
+
+    // [추가] URL 파라미터에 에러가 있으면 알림창 표시
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.has('error')) {
+        const errorMsg = urlParams.get('error');
+        alert('로그인에 실패했습니다: ' + decodeURIComponent(errorMsg));
+        // 알림 후 URL 정리 (선택 사항)
+        // history.replaceState({}, document.title, window.location.pathname);
+    }
 });
+
+function showToast(message) {
+    let toast = document.getElementById("toast");
+    if(!toast) {
+        toast = document.createElement("div");
+        toast.id = "toast";
+        toast.textContent = message;
+        document.body.appendChild(toast);
+    }
+ toast.textContent = message;
+    toast.classList.add('show');
+    setTimeout(() => {
+        toast.classList.remove("show");
+    }, 2500)
+    console.log(message); }

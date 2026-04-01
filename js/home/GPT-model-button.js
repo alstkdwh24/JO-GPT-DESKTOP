@@ -9,14 +9,23 @@ logoutButton.onclick=function (event) {
     $.ajax({
         type: 'GET',
         url: 'http://localhost:8086/login/logout',
+        xhrFields: { withCredentials: true }, // 쿠키 포함 확인
         success: function (response) {
             localStorage.removeItem('ACCESS_TOKEN');
-            console.log("로그아웃 성공:", response);
-            location.reload(); // 페이지 새로고침 추가
+                console.log("로그아웃 성공:", response);
             console.log("로그아웃 완료 후 페이지 새로고침");
             document.getElementById('authButtons').style.display = 'flex';
             document.getElementById('userProfile').style.display = 'none';
+            // 확실한 초기화를 원한다면 약간의 지연 후 새로고침
 
+            // 2. 세션 데이터 삭제 요청
+            if(window.electronAPI && window.electronAPI.clearSession) {
+                window.electronAPI.clearSession();
+
+                // 앱이 꺼지지 않으므로,  데이터 삭제 시간을 고려해
+                // 0.5 초 뒤에 페이지를 새로고침하여 로그아웃 상태를 UI에 반영합니다.
+                setTimeout(() => { location.reload();}, 500);
+            }
         },
         error: function (error) {
             console.error('Error fetching myInfo:', error);

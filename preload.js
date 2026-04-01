@@ -9,5 +9,8 @@ contextBridge.exposeInMainWorld('electronAPI', {
     onUpdate: (callback) => ipcRenderer.on('update', (event, ...args) => callback(...args)),
 
     // 인증 성공 리스너 (필요 시)
-    onAuthSuccess: (callback) => ipcRenderer.on('auth-success', (event, token) => callback(token))
+    onAuthSuccess: (callback) => ipcRenderer.on('auth-success', (event, token) => callback(token)),
+
+    // [추가] 세션 삭제를 위한 API 등록
+    clearSession: () => ipcRenderer.send('clear-session')
 });

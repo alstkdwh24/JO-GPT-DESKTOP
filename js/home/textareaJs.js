@@ -2,12 +2,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     /*textarea 내용 전송*/
     let textarea = document.querySelector('.fake-input');
+    if (textarea) {
+        textarea.focus();
+    }
     let searchBtn = document.querySelector('.search-real');
     searchBtn.onclick = (event) => {
         sendContents();
     }
     textarea.addEventListener("keydown", (event) => {
-        event.key = "Enter";
         if(event.keyCode === 13) {
             event.preventDefault();
             sendContents();
@@ -34,6 +36,8 @@ function sendContents() {
                 success: function (response) {
                     console.log(response);
                     textarea.value = "";
+                    textarea.style.height = 'auto'; // 높이 초기화 추가
+                    textarea.focus(); // 전송 후 다시 포커스
                     realContent.style.alignItems = "flex-end";
                     realBoxFont.textContent="";
 
