@@ -14,7 +14,8 @@
   "devDependencies": {
     "electron": "^41.0.3",
     "electron-debug": "^4.1.0",
-    "electron-devtools-installer": "^4.0.0"
+    "electron-devtools-installer": "^4.0.0",
+    "electron-reload": "^2.0.0-alpha.1"
   },
   "dependencies": {
     "electron-reloader": "^1.2.3",

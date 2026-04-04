@@ -19,13 +19,11 @@ logoutButton.onclick=function (event) {
             // 확실한 초기화를 원한다면 약간의 지연 후 새로고침
 
             // 2. 세션 데이터 삭제 요청
-            if(window.electronAPI && window.electronAPI.clearSession) {
-                window.electronAPI.clearSession();
 
                 // 앱이 꺼지지 않으므로,  데이터 삭제 시간을 고려해
                 // 0.5 초 뒤에 페이지를 새로고침하여 로그아웃 상태를 UI에 반영합니다.
                 setTimeout(() => { location.reload();}, 500);
-            }
+
         },
         error: function (error) {
             console.error('Error fetching myInfo:', error);

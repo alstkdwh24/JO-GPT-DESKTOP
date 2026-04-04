@@ -22,6 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
     initApp();
+
     // 1. 사용자 정보 불러오기 함수 정의
     function fetchMyInfo() {
         const token = localStorage.getItem('ACCESS_TOKEN');
@@ -75,7 +76,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const textarea = document.querySelector('.fake-input');
                 setTimeout(() => {
                     if (textarea) textarea.focus();
-                },100)
+                }, 100)
 
             }
         });
@@ -85,26 +86,21 @@ document.addEventListener('DOMContentLoaded', () => {
     fetchMyInfo();
 
     // [추가] URL 파라미터에 에러가 있으면 알림창 표시
-    const urlParams = new URLSearchParams(window.location.search);
-    if (urlParams.has('error')) {
-        const errorMsg = urlParams.get('error');
-        alert('로그인에 실패했습니다: ' + decodeURIComponent(errorMsg));
-        // 알림 후 URL 정리 (선택 사항)
-        // history.replaceState({}, document.title, window.location.pathname);
-    }
+
 });
 
 function showToast(message) {
     let toast = document.getElementById("toast");
-    if(!toast) {
+    if (!toast) {
         toast = document.createElement("div");
         toast.id = "toast";
         toast.textContent = message;
         document.body.appendChild(toast);
     }
- toast.textContent = message;
+    toast.textContent = message;
     toast.classList.add('show');
     setTimeout(() => {
         toast.classList.remove("show");
     }, 2500)
-    console.log(message); }
+    console.log(message);
+}

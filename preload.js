@@ -12,5 +12,12 @@ contextBridge.exposeInMainWorld('electronAPI', {
     onAuthSuccess: (callback) => ipcRenderer.on('auth-success', (event, token) => callback(token)),
 
     // [추가] 세션 삭제를 위한 API 등록
-    clearSession: () => ipcRenderer.send('clear-session')
+    clearSession: () => ipcRenderer.send('clear-session'),
+
+    // ==========================================
+    // [추가해야 할 부분] 자동 로그인 관련 API
+    // ==========================================
+    saveToken: (token) => ipcRenderer.invoke('save-token', token),
+    getToken: () => ipcRenderer.invoke('get-token'),
+    onSessionCleared: (callback) => ipcRenderer.on('session-cleared', (event, value) => callback(value))
 });
