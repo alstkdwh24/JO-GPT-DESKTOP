@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,9 +10,10 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet"
           href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=add_circle,more_horiz"/>
-    <link rel="stylesheet" href="./css/GPT-Home.css">
-    <link rel="stylesheet" href="./css/modelJoin.css">
-    <link rel="stylesheet" href="./css/toastMessage.css">
+    <link rel="stylesheet" href="css/index/GPT-Home.css">
+    <link rel="stylesheet" href="css/index/modelJoin.css">
+    <link rel="stylesheet" href="css/index/toastMessage.css">
+    <link rel="stylesheet" href="css/chatTing/chatTing.css">
     <script src="./node_modules/jquery/dist/jquery.min.js"></script>
 
 </head>
@@ -79,6 +80,7 @@ more_horiz
                             <option>GPT-4.5</option>
                             <option>Gemini 1.5</option>
                         </select>
+
                         <button class="search-btn search-real">
                             <i class="fa fa-arrow-up"></i>
                         </button>
@@ -135,5 +137,6 @@ more_horiz
 <script src="./js/home/GPT-model-button.js"></script>
 <script src="./js/home/textareaJs.js"></script>
 <script src="./js/home/gpt-home.js"></script>
+<script src="./js/home/chatTing.js"></script>
 </body>
 </html>

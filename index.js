@@ -1,6 +1,7 @@
 const {app, BrowserWindow, Menu, globalShortcut, ipcMain, session, safeStorage} = require('electron');
 const path = require('path');
 const {jwtDecode} = require('jwt-decode');
+const electronReload = require("electron-reload");
 //프로토콜 이름
 const CUSTOM_SCHEME = 'jo-gpt';
 let pendingToken = null; // 전달되지 못한 토큰 임시 보관
@@ -172,6 +173,7 @@ ipcMain.handle('save-token', (event, token) => {
     return false;
 });
 
+
 // 2. 토큰 복호화 및 불러오기
 ipcMain.handle('get-token', () => {
     if (fs.existsSync(TOKEN_FILE_PATH) && safeStorage.isEncryptionAvailable()) {
@@ -210,6 +212,11 @@ function registerShortcuts() {
     globalShortcut.unregisterAll(); // 중복 등록 방지
 
     globalShortcut.register('F5', () => {
+        app.relaunch();
+    });
+    // 개발자 도구 열기
+    globalShortcut.register('CommandOrControl+Shift+I', () => {
+        mainWindow.webContents.openDevTools();
     });
 
     globalShortcut.register('CommandOrControl+Alt+R', () => {

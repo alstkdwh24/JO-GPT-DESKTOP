@@ -62,7 +62,6 @@ document.addEventListener('DOMContentLoaded', () => {
     if (window.electronAPI && window.electronAPI.onAuthSuccess) {
         window.electronAPI.onAuthSuccess((token) => {
             if (token) {
-                console.log(">>> [Success] 메인 프로세스로부터 토큰 수신:", token);
                 localStorage.setItem('ACCESS_TOKEN', token);
                 // 1. 모달을 즉시 닫아서 반응성을 높임
                 const loginModal = document.querySelector('.modelLogin');
