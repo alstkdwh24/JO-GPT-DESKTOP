@@ -37,17 +37,21 @@ function sendContents() {
                 contentType: 'application/json',
                 success: function (response) {
                     console.log("반응" + response);
-                    textarea.value = "";
-                    textarea.style.height = 'auto'; // 높이 초기화 추가
-                    textarea.focus(); // 전송 후 다시 포커스
-                    realContent.style.alignItems = "flex-end";
-                    realBoxFont.textContent="";
 
                  /*gpt 대화 누적을 위한 */
                     $.ajax({
-                        method: 'GET',
-                        url: 'http://localhost:8086/gptApi/gptContents',
+                        method: 'POST',
+                        url: 'http://localhost:8082/contents/gptContents',
+                        headers: { Authorization: 'Bearer ' + token },
+                        data: JSON.stringify({myChatContents: gptContents}),
+                        contentType: 'application/json',
                         success: function (response) {
+                            console.log("반응" + response);
+                            textarea.value = "";
+                            textarea.style.height = 'auto'; // 높이 초기화 추가
+                            textarea.focus(); // 전송 후 다시 포커스
+                            realContent.style.alignItems = "flex-end";
+                            realBoxFont.textContent="";
                             console.log(response);
                         }
                     })
