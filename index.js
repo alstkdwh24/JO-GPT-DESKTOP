@@ -211,22 +211,21 @@ ipcMain.on('clear-session', async (event) => {
 function registerShortcuts() {
     globalShortcut.unregisterAll(); // 중복 등록 방지
 
+    /*앱 리로딩*/
     globalShortcut.register('F5', () => {
         app.relaunch();
     });
-    // 개발자 도구 열기
-    globalShortcut.register('CommandOrControl+Shift+I', () => {
-        mainWindow.webContents.openDevTools();
-    });
 
-    globalShortcut.register('CommandOrControl+Alt+R', () => {
-        app.relaunch();
-        app.exit(0);
-    });
+
 
     globalShortcut.register('CommandOrControl+A', () => {
         if (mainWindow) mainWindow.loadFile('index.html');
     });
+    // 개발자 도구 열기
+
+    globalShortcut.register('CommandOrControl+F12', () => {
+        mainWindow.webContents.openDevTools();
+    })
 }
 
 app.on('window-all-closed', () => {
