@@ -2,8 +2,11 @@ const {app, BrowserWindow, Menu, globalShortcut, ipcMain, session, safeStorage} 
 const path = require('path');
 const {jwtDecode} = require('jwt-decode');
 const electronReload = require("electron-reload");
+const fs = require('fs');
+const TOKEN_FILE_PATH = path.join(app.getPath('userData'), 'auth-token.dat');
+const config = require('js/config/config.js');
 //프로토콜 이름
-const CUSTOM_SCHEME = 'jo-gpt';
+const CUSTOM_SCHEME = config.CUSTOM_SCHEME;
 let pendingToken = null; // 전달되지 못한 토큰 임시 보관
 let mainWindow;
 
@@ -67,9 +70,8 @@ function handleCustomProtocol(url) {
 
     // [수정] getAllWindows 대신 전역 변수 mainWindow 사용
     if (!mainWindow) {
-        console.log("good");
-        console.log(">>> [Success] Sending token to Renderer...");
-
+        console.log(">>> mainWindow 없음, 토큰 보류");
+        pendingToken = url;  // 나중에 창이 생기면 처리
         return;
     }
 
@@ -93,8 +95,7 @@ function handleCustomProtocol(url) {
                     if (mainWindow && !mainWindow.isDestroyed()) {
                         mainWindow.webContents.send('auth-success', token);
                     }else {
-                        mainWindow.webContents.send('auth-success', token);
-
+                        console.error("mainWindow가 파괴되어 토큰 전송 불가");
                     }
                 }, 100);
             }
@@ -153,8 +154,17 @@ function createWindow() {
     mainWindow.maximize();
     Menu.setApplicationMenu(null);
     mainWindow.loadFile('index.html');
-    mainWindow.webContents.openDevTools();
 
+    mainWindow.webContents.on('did-finish-load', () => {
+        if(pendingToken){
+            handleCustomProtocol(pendingToken);
+            pendingToken = null;
+        }
+    })
+// 수정안
+    if (!app.isPackaged) {
+        mainWindow.webContents.openDevTools();
+    }
     // 단축키 등록 (창이 활성화된 상태에서만 동작하도록)
     registerShortcuts();
 }
@@ -192,7 +202,8 @@ ipcMain.handle('get-token', () => {
 ipcMain.on('clear-session', async (event) => {
     try {
         // 모든 쿠키 및 캐시 데이터 삭제
-
+        await session.defaultSession.clearStorageData();
+        await session.defaultSession.clearCache();
 
         // [추가] 로컬에 저장된 암호화 토큰 파일도 물리적으로 삭제
         if (fs.existsSync(TOKEN_FILE_PATH)) {
@@ -213,7 +224,7 @@ function registerShortcuts() {
 
     /*앱 리로딩*/
     globalShortcut.register('F5', () => {
-        app.relaunch();
+       if(mainWindow && !mainWindow.isDestroyed()) mainWindow.webContents.reload();
     });
 
 
@@ -222,10 +233,11 @@ function registerShortcuts() {
         if (mainWindow) mainWindow.loadFile('index.html');
     });
     // 개발자 도구 열기
-
-    globalShortcut.register('CommandOrControl+F12', () => {
-        mainWindow.webContents.openDevTools();
-    })
+    if (!app.isPackaged) {
+        globalShortcut.register('CommandOrControl+F12', () => {
+            mainWindow.webContents.openDevTools();
+        })
+    }
 }
 
 app.on('window-all-closed', () => {

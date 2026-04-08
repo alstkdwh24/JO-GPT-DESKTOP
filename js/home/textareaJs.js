@@ -47,6 +47,7 @@ function sendContents() {
                     success: function (response) {
                         textarea.value = "";
                         textarea.style.height = 'auto'; // 높이 초기화 추가
+                        realContent.style.alignItems = "flex-end";
                         textarea.focus(); // 전송 후 다시 포커스
                         realContent.style.alignItems = "flex-end";
                         realBoxFont.textContent = "";

@@ -48,7 +48,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 document.getElementById('authButtons').style.display = 'none';
                 document.getElementById('userProfile').style.display = 'flex';
             },
-            error: function (error) {
+            error: function (xhr) {
+                if(xhr.status === 401){
+                    localStorage.removeItem('ACCESS_TOKEN');
+                    if( window.electronAPI.clearSession) {
+                        window.electronAPI.clearSession();
+                    }
+                    showToast('로그인이 만료되었습니다. 다시 로그인해주세요.');
+                }
                 console.error('내 정보 불러오기 실패:', error);
                 document.getElementById('authButtons').style.display = 'flex';
                 document.getElementById('userProfile').style.display = 'none';
@@ -60,9 +67,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 2. Electron 인증 성공 리스너 설정
     if (window.electronAPI && window.electronAPI.onAuthSuccess) {
-        window.electronAPI.onAuthSuccess((token) => {
+        window.electronAPI.onAuthSuccess(async (token) => {
             if (token) {
                 localStorage.setItem('ACCESS_TOKEN', token);
+
+                // 암호화 파일로도 저장 (자동 로그인 용) 앱을 껏다 켜도 getToken으로 암호화된 토큰을 복구해서 자동 로그인이 가능해진다.
+                if (window.electronAPI.saveToken) {
+                    await window.electronAPI.saveToken(token);
+                }
                 // 1. 모달을 즉시 닫아서 반응성을 높임
                 const loginModal = document.querySelector('.modelLogin');
                 if (loginModal) loginModal.style.display = 'none';

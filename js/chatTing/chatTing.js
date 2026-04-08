@@ -81,6 +81,22 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
     });
-
+// 현재: 30줄짜리 createElement 지옥
+// 실무 버전:
+    function createChatItem(item) {
+        const div = document.createElement('div');
+        div.classList.add('chatting-list-container');
+        div.innerHTML = `
+        <img class="chatting-icon" src="${item.image}" alt="">
+        <div class="chatting-list-word">
+            ${item.title}
+            <div class="chatting-list-time">
+                <i class="fa fa-clock-o chatting-list-time-icon"></i>
+                <span class="chatting-list-time-text">${item.time || '오전 10:00'}</span>
+            </div>
+        </div>
+    `;
+        return div;
+    }
 
 });
