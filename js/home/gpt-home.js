@@ -23,6 +23,11 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     initApp();
 
+    const homeBtn = document.getElementById('homeBtn');
+    homeBtn.addEventListener('click', () => {
+        window.location.href = 'index.html';
+    })
+
     // 1. 사용자 정보 불러오기 함수 정의
     function fetchMyInfo() {
         const token = localStorage.getItem('ACCESS_TOKEN');
@@ -47,7 +52,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 document.getElementById('authButtons').style.display = 'none';
                 document.getElementById('userProfile').style.display = 'flex';
-            },
+
+                },
             error: function (xhr) {
                 if(xhr.status === 401){
                     localStorage.removeItem('ACCESS_TOKEN');

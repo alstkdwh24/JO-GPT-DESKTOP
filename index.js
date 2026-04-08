@@ -4,7 +4,7 @@ const {jwtDecode} = require('jwt-decode');
 const electronReload = require("electron-reload");
 const fs = require('fs');
 const TOKEN_FILE_PATH = path.join(app.getPath('userData'), 'auth-token.dat');
-const config = require('js/config/config.js');
+const config = require('./js/config/config.js');
 //프로토콜 이름
 const CUSTOM_SCHEME = config.CUSTOM_SCHEME;
 let pendingToken = null; // 전달되지 못한 토큰 임시 보관
@@ -18,9 +18,8 @@ if (!isDev) {
         // node_modules 폴더 내부에 있는 electron 실행 파일을 지정하여, 
         // 메인 프로세스 코드가 수정되었을 때 앱을 완전히 재시작하도록 설정합니다.
         electron: path.join(__dirname, 'node_modules', '.bin', 'electron')
-      });}
-
-
+    });
+}
 
 
 if (!app.requestSingleInstanceLock()) {//Electron앱이 중복실행 되는 것을 방지하고, 하나의 인스턴스만 뜨도록 보장하는 역할
@@ -29,7 +28,7 @@ if (!app.requestSingleInstanceLock()) {//Electron앱이 중복실행 되는 것�
 } else {
     app.on('second-instance', (event, commandLine) => {
         //Electron 앱이 이미 실행중일때 사용자가 앱을 한번 더 실행하려고 하거나 외부 링크(딥링크)를 통해 앱을 호출하려고 할때 발생하는 이벤트 처림
-        console.log("second-instance{}" ,event);
+        console.log("second-instance{}", event);
         if (mainWindow) {
             if (mainWindow.isMinimized())
                 // 창이 최소화되어 있다면 원래 크기로 복구합니다.
@@ -38,7 +37,7 @@ if (!app.requestSingleInstanceLock()) {//Electron앱이 중복실행 되는 것�
             mainWindow.focus();
             // Windows에서 전달된 URL 확인 (소셜 로그인 토큰 처리)
             const url = commandLine.find((arg) => arg.startsWith(CUSTOM_SCHEME + '://'));
-            console.log("second-instance{}" ,url);
+            console.log("second-instance{}", url);
 
             if (url) handleCustomProtocol(url);
         }
@@ -50,7 +49,8 @@ if (!app.requestSingleInstanceLock()) {//Electron앱이 중복실행 되는 것�
         if (process.defaultApp) {
             if (process.argv.length >= 2) {
                 const appPath = path.resolve('.');
-                app.setAsDefaultProtocolClient(CUSTOM_SCHEME, process.execPath, [appPath]);            }
+                app.setAsDefaultProtocolClient(CUSTOM_SCHEME, process.execPath, [appPath]);
+            }
         } else {
             app.setAsDefaultProtocolClient(CUSTOM_SCHEME);
         }
@@ -94,12 +94,12 @@ function handleCustomProtocol(url) {
                 setTimeout(() => {
                     if (mainWindow && !mainWindow.isDestroyed()) {
                         mainWindow.webContents.send('auth-success', token);
-                    }else {
+                    } else {
                         console.error("mainWindow가 파괴되어 토큰 전송 불가");
                     }
                 }, 100);
             }
-        }else {
+        } else {
             mainWindow.loadFile('index.html');
         }
     } catch (e) {
@@ -142,12 +142,12 @@ function createWindow() {
         }// 2. http나 https로 시작하는 모든 외부 요청은 무조건 시스템 브라우저로 엽니다.
         // 이렇게 하면 앱 내부에 "Login with OAuth 2.0" 같은 창이 뜨는 것을 방지할 수 있습니다.
         if (url.startsWith('http:') || url.startsWith('https:')) {
-            const { shell } = require('electron');
+            const {shell} = require('electron');
             shell.openExternal(url).then(r => console.log("External URL opened:", url)).catch(e => console.error("Failed to open external URL:", e));
-            return { action: 'deny' }; // 앱 내에서 새 창이 열리는 것을 차단
+            return {action: 'deny'}; // 앱 내에서 새 창이 열리는 것을 차단
         }
 
-        return { action: 'deny' }; // 그 외의 모든 새 창 요청 차단
+        return {action: 'deny'}; // 그 외의 모든 새 창 요청 차단
 
     });
 
@@ -156,7 +156,7 @@ function createWindow() {
     mainWindow.loadFile('index.html');
 
     mainWindow.webContents.on('did-finish-load', () => {
-        if(pendingToken){
+        if (pendingToken) {
             handleCustomProtocol(pendingToken);
             pendingToken = null;
         }
@@ -168,6 +168,7 @@ function createWindow() {
     // 단축키 등록 (창이 활성화된 상태에서만 동작하도록)
     registerShortcuts();
 }
+
 // 1. 토큰 암호화 및 저장
 ipcMain.handle('save-token', (event, token) => {
     if (safeStorage.isEncryptionAvailable()) {
@@ -219,14 +220,14 @@ ipcMain.on('clear-session', async (event) => {
         console.error("세션 삭제 중 에러 발생:", e);
     }
 });
+
 function registerShortcuts() {
     globalShortcut.unregisterAll(); // 중복 등록 방지
 
     /*앱 리로딩*/
     globalShortcut.register('F5', () => {
-       if(mainWindow && !mainWindow.isDestroyed()) mainWindow.webContents.reload();
+        if (mainWindow && !mainWindow.isDestroyed()) mainWindow.webContents.reload();
     });
-
 
 
     globalShortcut.register('CommandOrControl+A', () => {

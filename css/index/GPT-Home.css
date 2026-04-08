@@ -1,4 +1,11 @@
 /*JO-GPT*/
+@font-face {
+    font-family: 'Noto Sans KR';
+    src: url('../../fonts/TmoneyRoundWindExtraBold.otf') format('opentype');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
 * {
     padding: 0;
     margin: 0;
@@ -19,6 +26,7 @@ body {
     flex-direction: row;
 }
 
+/*사이트바*/
 .sideBar {
     width: 60px;
     height: 100vh; /* 화면 전체 높이 */
@@ -28,6 +36,12 @@ body {
     flex-direction: column;
 
 }
+/*사이드 버튼 공통요소*/
+.same-font {
+    font-size: 24px;
+    color: #555;
+}
+
 
 .sideBarImg {
 
@@ -42,7 +56,6 @@ body {
     align-items: center;
     background-color: transparent;
 }
-
 
 
 .sideBarImgTwo {
@@ -153,15 +166,17 @@ body {
 
 .topBar-left {
     height: 100%;
-    width: 150px;
+    width: 11rem;
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
 .topBar-left > h2 {
-    font-weight: normal;
-    font-size: 20px;
+    padding: 1.5rem;
+    font-weight: bold;
+    font-size: 2rem;
+
 }
 
 .topBar-middle {
@@ -274,8 +289,10 @@ body {
     background: #F6FAFF;
     min-height: 92vh;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
+
 }
 
 .realBoxFont {
@@ -284,7 +301,7 @@ body {
 
 
 .realBox {
-    width: 70%;
+    width: 44rem;
 
     min-height: 30%;
 
@@ -298,7 +315,7 @@ body {
 .input-wrapper {
     display: flex;
     flex-direction: column;
-    width: 80%; /* 반응형이면 width:100%; max-width:260px */
+    width: 100%; /* 반응형이면 width:100%; max-width:260px */
     min-height: 100px;
 
     border: 1px solid #ccc;
@@ -318,12 +335,16 @@ body {
     overflow-y: hidden; /* ✅ 세로 스크롤 대신 높이로 증가 */
     overflow-x: hidden;
     box-sizing: border-box;
+    font-size: 16px;
+    font-family: 'Cafe24Ssurround', sans-serif;  /* ← 여기서 적용 */
 
 }
+
 .fake-input:focus {
-    outline: none;   /*  검은 테두리 제거 */
+    outline: none; /*  검은 테두리 제거 */
 }
-.search-div{
+
+.search-div {
     min-height: 30%;
     display: flex;
     justify-content: space-between;
@@ -345,30 +366,34 @@ body {
     place-items: center;
 }
 
-.search-real{
-margin-right: 4px}
+.search-real {
+    margin-right: 4px
+}
 
 .search-btn i {
     color: #888;
     font-size: 14px;
 }
+
 /*검색 버튼과 선택*/
-.search-result{
+.search-result {
     width: 24%;
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
+
 /*GPT모델 선택*/
-.select-model{
+.select-model {
     width: 70%;
     height: 60%;
     border: none;
 }
 
-.select-model:focus{
+.select-model:focus {
     outline: none;
 }
+
 /*GPT 모델 선택 끝*/
 
 @media (width < 670px) {
