@@ -568,4 +568,11 @@ body {
 
 }
 
+/*폰트 적용 x*/
+.fontFamily{
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Malgun Gothic', sans-serif;}
 
+/*폰트적용 x*/
+#fontFamily{
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Malgun Gothic', sans-serif;
+}
