@@ -1,4 +1,3 @@
-
 document.addEventListener('DOMContentLoaded', () => {
 
     /*textarea 내용 전송*/
@@ -28,24 +27,28 @@ function sendContents() {
     let gptContents = textarea.value
     console.log(textarea.value);
     let token = localStorage.getItem('ACCESS_TOKEN');
+    let realBox = document.querySelector('.realBox');
 
-    textarea.style.height = 'auto'; // 높이 초기화 추가
-    myGemini.style.gap = '1rem';
-    myGemini.style.height = '100%';
-    myGemini.style.width = '44rem';
-    myGemini.style.display = 'flex';
-    myGemini.style.flexDirection = 'column';
-    myGemini.style.justifyContent = 'flex-start';
-
-    realContent.style.alignItems = "center";
-    textarea.focus(); // 전송 후 다시 포커스
-    realBoxFont.textContent = "";
-    const myContents = textarea.value;
-    //말풍선 생성
-    MyContents(myContents);
-    textarea.value = "";
-    try {
-
+    if (token != null) {
+        textarea.style.height = 'auto'; // 높이 초기화 추가
+        myGemini.style.gap = '1rem';
+        myGemini.style.height = '80%';
+        myGemini.style.width = '44rem';
+        myGemini.style.display = 'flex';
+        myGemini.style.flexDirection = 'column';
+        myGemini.style.justifyContent = 'flex-start';
+        realBox.style.display = 'flex';
+        realBox.style.alignItems = 'center';
+        realBox.style.justifyContent = 'center';
+        realBox.style.minHeight = '1rem';
+        realBoxFont.style.display = "none";
+        realBoxFont.style.height = '0px';
+        textarea.focus(); // 전송 후 다시 포커스
+        realBoxFont.textContent = "";
+        const myContents = textarea.value;
+        //말풍선 생성
+        MyContents(myContents);
+        textarea.value = "";
         /*db에 대화내용 저장*/
         $.ajax({
             method: 'POST',
@@ -74,6 +77,15 @@ function sendContents() {
                         const gptText = response.candidates[0].content.parts[0].text;
                         console.log(gptText);
                         GPTContents(gptText);
+                        /*채팅방 만들기 ajax*/
+                        $.ajax({
+                            method: 'POST',
+                            url: "http://localhost:8082/contents/chatRoom",
+                            headers: {
+                                'Authorization': 'Bearer ' + token
+                            },
+                        }).done(function () {
+                        })
                     }, error: function (error) {
                         // ★ 에러 시에도 로딩 제거
                         hideLoading();
@@ -86,7 +98,8 @@ function sendContents() {
             }
         })
 
-    } catch (error) {
+    } else {
+        alert("로그인 후 이용해주세요");
 
     }
 }
@@ -94,47 +107,36 @@ function sendContents() {
 //내 대화를 말풍선으로 보여주기 위한
 function MyContents(myContents) {
     const myGeminiTalk = document.querySelector('.my-gemini-talk');
-    const div = document.createElement('div');
-    div.classList.add('myContents');
-    console.log("myContent {}", myContents);
+    const tpl = document.getElementById('tpl-my-content');
+    const clone = tpl.content.cloneNode(true);
+    clone.querySelector('#realMyContent').textContent = myContents; // ✅ XSS 안전    console.log("myContent {}", myContents);
+    myGeminiTalk.appendChild(clone);
 
-    div.innerHTML = "<div id='myContent-myContent'><div id='realMyContent'>" + myContents + "</div></div>"
-
-    return myGeminiTalk.appendChild(div);
 }
 
 //gpt 대화를 말품선으로 보여주기 위한
 function GPTContents(gptContents) {
     const gptGeminiTalk = document.querySelector('.my-gemini-talk');
-    const div = document.createElement('div');
-    div.classList.add('gptContents');
-    console.log("myContent {}", gptContents);
-    const htmlContent = marked.parse(gptContents);
+    const tpl = document.getElementById('tpl-gpt-content');
+    //template 요소의 content를 복제하여 새로운 노드 생성
+    const clone = tpl.content.cloneNode(true)
+    clone.querySelector('#realGeminiContent').innerHTML = marked.parse(gptContents); // 마크다운은 innerHTML 필요
 
-    div.innerHTML = "<div id='geminiContent-geminiContent'> <div id='realGeminiContent'>" + htmlContent + "</div></div>"
-    return gptGeminiTalk.appendChild(div);
+    gptGeminiTalk.appendChild(clone);
 }
 
+/*로딩 보여주기*/
 function showLoading() {
     const myGeminiTalk = document.querySelector('.my-gemini-talk');
-    const div = document.createElement('div');
-
-    div.classList.add('loading');
-    div.id = 'start-loading';
-    div.innerHTML = `
-        <div id='geminiContent-geminiContent'>
-            <div class='loading-dots'>
-                <span></span><span></span><span></span>
-            </div>
-        </div>
-    `;
-    myGeminiTalk.appendChild(div);
-    // 자동 스크롤
-    div.scrollIntoView({behavior: 'smooth'});
+    const tpl = document.getElementById('tpl-loading');
+    const clone = tpl.content.cloneNode(true);
+    myGeminiTalk.appendChild(clone);
+    document.getElementById('start-loading').scrollIntoView({behavior: 'smooth'});
 }
 
+/*로딩 제거*/
 function hideLoading() {
-    const loading=document.getElementById('start-loading');
+    const loading = document.getElementById('start-loading');
     if (loading) {
         loading.remove();
     }

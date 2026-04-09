@@ -24,12 +24,16 @@ body {
     background: #F6FAFF;
     display: flex;
     flex-direction: row;
+    height: 100%;
 }
 
 /*사이트바*/
 .sideBar {
     width: 60px;
-    height: 100vh; /* 화면 전체 높이 */
+    height: 100%;
+    /*
+    height: 100vh; !* 화면 전체 높이 *!
+    */
     background: #DDEBFF;
     display: flex;
     position: relative; /* ⭐ 기준점 */
@@ -287,7 +291,7 @@ body {
 .realContent {
     width: calc(100vw - 60px);
     background: #F6FAFF;
-    min-height: 92vh;
+    min-height: calc(100vh - 71px);
     display: flex;
     flex-direction: column;
     justify-content: center;

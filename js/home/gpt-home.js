@@ -53,13 +53,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 document.getElementById('authButtons').style.display = 'none';
                 document.getElementById('userProfile').style.display = 'flex';
 
-                $.ajax({
-                    method: 'POST',
-                    url:"http://localhost:8082/contents/chatRoom",
-                    headers: {
-                        'Authorization': 'Bearer ' + token
-                    },
-                }).done(function () {})
+
                 },
             error: function (xhr) {
                 if(xhr.status === 401){
