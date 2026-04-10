@@ -40,7 +40,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         $.ajax({
             method: 'GET',
-            url: 'http://localhost:8086/login/myInfo',
+            url: CONFIG.API_BASE_URL + '/login/myInfo',
             headers: {
                 'Authorization': 'Bearer ' + token
             },

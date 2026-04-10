@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', () => {
         content.style.flexDirection = "row";
         content.style.justifyContent = "center";
         console.log("chattingList {}",localStorage.getItem('ACCESS_TOKEN'));
-        fetch('http://localhost:8082/contents/chattingList', {
+        fetch(CONFIG.API_CONTENTS_URL + '/contents/chattingList', {
             method: 'GET',
             headers: {
                 'Authorization': 'Bearer ' + localStorage.getItem('ACCESS_TOKEN')
