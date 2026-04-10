@@ -20,6 +20,25 @@ document.addEventListener('DOMContentLoaded', () => {
         content.style.display = "flex";
         content.style.flexDirection = "row";
         content.style.justifyContent = "center";
+        console.log("chattingList {}",localStorage.getItem('ACCESS_TOKEN'));
+        fetch('http://localhost:8082/contents/chattingList', {
+            method: 'GET',
+            headers: {
+                'Authorization': 'Bearer ' + localStorage.getItem('ACCESS_TOKEN')
+            }
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log("dataList", data);
+            })
+            .catch(err => {
+                console.error('에러:', err);
+            });
         const searchList = [{
             title: "내 물음", contents: "이것을 물어봄", image: "image/Gemini_chat.png"
         }, {
