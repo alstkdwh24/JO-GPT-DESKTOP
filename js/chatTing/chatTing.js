@@ -20,63 +20,52 @@ document.addEventListener('DOMContentLoaded', () => {
         content.style.display = "flex";
         content.style.flexDirection = "row";
         content.style.justifyContent = "center";
-        console.log("chattingList {}",localStorage.getItem('ACCESS_TOKEN'));
-        fetch(CONFIG.API_CONTENTS_URL + '/contents/chattingList', {
-            method: 'GET',
-            headers: {
-                'Authorization': 'Bearer ' + localStorage.getItem('ACCESS_TOKEN')
-            }
-        })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error(`HTTP ${response.status}`);
+        try {
+            const data = await fetch(CONFIG.API_CONTENTS_URL + '/contents/chattingList', {
+                method: 'GET',
+                headers: {
+                    'Authorization': 'Bearer ' + localStorage.getItem('ACCESS_TOKEN')
                 }
-                return response.json();
-            })
-            .then(data => {
-                console.log("dataList", data);
-            })
-            .catch(err => {
-                console.error('에러:', err);
             });
-        const searchList = [{
-            title: "내 물음", contents: "이것을 물어봄", image: "image/Gemini_chat.png"
-        }, {
-            title: "내 물음", contents: "이것을 물어봄", image: "image/Gemini_chat.png"
-        }, {
-            title: "내 물음", contents: "이것을 물어봄", image: "image/Gemini_chat.png"
-        },
+            const dataList = await data.json();
+            console.log("dataList", dataList);
 
-        ];
-        for (let i = 0; i < searchList.length; i++) {
-            const chattingList = document.getElementById('chatting-list');
-            const chattingListContainer = document.createElement('div');
-            chattingListContainer.classList.add('chatting-list-container');
-            chattingList.appendChild(chattingListContainer);
-            const img = document.createElement('img');
-            img.classList.add('chatting-icon');
-            img.src = searchList[i].image;
-            chattingListContainer.appendChild(img);
-            const chattingListTitle = document.createElement('div');
-            chattingListTitle.classList.add('chatting-list-word');
-            chattingListContainer.appendChild(chattingListTitle);
-            const chattingListTitleText = document.createTextNode(searchList[i].title);
-            chattingListTitle.appendChild(chattingListTitleText);
-            const chattingListContents = document.createElement('div');
-            chattingListContents.classList.add('chatting-list-time');
-            chattingListTitle.appendChild(chattingListContents);
-            const chattingListContentsTime = document.createElement("i");
-            chattingListContentsTime.classList.add('fa', 'fa-clock-o', "chatting-list-time-icon");
-            chattingListContents.appendChild(chattingListContentsTime);
-            const chattingListContentsTimeText = document.createElement("span");
-            chattingListContentsTimeText.classList.add('chatting-list-time-text');
-            chattingListContentsTimeText.textContent = "오전 10:00";
-            chattingListContents.appendChild(chattingListContentsTimeText);
+            for (let i = 0; i < dataList.length; i++) {
+                const chattingList = document.getElementById('chatting-list');
+                const chattingListContainer = document.createElement('div');
+                chattingListContainer.classList.add('chatting-list-container');
+                chattingList.appendChild(chattingListContainer);
+                const img = document.createElement('img');
+                img.classList.add('chatting-icon');
+                img.src = "image/blueChatting.png";
+                img.alt = "s"
+                chattingListContainer.appendChild(img);
+                const chattingListTitle = document.createElement('div');
+                chattingListTitle.classList.add('chatting-list-word');
+                chattingListContainer.appendChild(chattingListTitle);
+                const chattingListTitleText = document.createTextNode(dataList[i].showMyChatContents);
+                chattingListTitle.appendChild(chattingListTitleText);
+                const chattingListContents = document.createElement('div');
+                chattingListContents.classList.add('chatting-list-time');
+                chattingListTitle.appendChild(chattingListContents);
+                const chattingListContentsTime = document.createElement("i");
+                chattingListContentsTime.classList.add('fa', 'fa-clock-o', "chatting-list-time-icon");
+                chattingListContents.appendChild(chattingListContentsTime);
+                const chattingListContentsTimeText = document.createElement("span");
+                chattingListContentsTimeText.classList.add('chatting-list-time-text');
+                const time=dataList[i].showChatRegistration.slice(11, 16)
+                let date= dataList[i].showChatRegistration.slice(5, 11)
+               date=date.replace("-", "월");
+                date=date.replace("T", "일")
+                chattingListContentsTimeText.textContent =date +" " +time;
+                chattingListContents.appendChild(chattingListContentsTimeText);
 
-            console.log(chattingList);
+                console.log(chattingList);
 
+            }
+        } catch (error) {
+            console.error('Error fetching data:', error);
         }
-
 
         // 검색 입력창 Enter키 검색 + Tab키 다음 칸 이동
         const searchInput = content.querySelector('#search-chatting-input');

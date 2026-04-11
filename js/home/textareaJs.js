@@ -68,7 +68,7 @@ document.addEventListener('DOMContentLoaded', () => {
             //말풍선 생성
             MyContents(myContents);
             textarea.value = "";
-            sendContentsAjax(myContents).then(response => {
+            sendContentsAjax(myContents, token).then(response => {
                 return "success";
             }).catch(error => {
                 return "error"
@@ -114,7 +114,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     /*ajax 연속 코드 가독성 살린 것 내가 쓴 메시지 보내고 gpt응답받는 코드*/
-    async function sendContentsAjax(myContents) {
+    async function sendContentsAjax(myContents, token) {
         if (!token) {
             alert("로그인 후 이용해주세요");
             return;
@@ -156,7 +156,7 @@ document.addEventListener('DOMContentLoaded', () => {
     /*채팅방 만들어지고 메시지 보낼때*/
     function twoSendContents(showChat) {
         console.log("showChatss {}", showChat);
-        let token = localStorage.getItem('showChat');
+        let token = localStorage.getItem('ACCESS_TOKEN');
 
         if (!textarea.value.trim()) {
             return;
@@ -169,7 +169,7 @@ document.addEventListener('DOMContentLoaded', () => {
             //말풍선 생성
             MyContents(myContents);
             textarea.value = "";
-            twoSendContentsAjax(myContents, showChat).then(response => {
+            twoSendContentsAjax(token, myContents, showChat).then(response => {
                 return "success";
             }).catch(error => {
                 return "error"
@@ -177,7 +177,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    async function twoSendContentsAjax(myContents, showChat) {
+    async function twoSendContentsAjax(token,myContents, showChat) {
         showLoading();
 
         const response3 = await fetch(CONFIG.API_CONTENTS_URL + '/contents/myContents', {
